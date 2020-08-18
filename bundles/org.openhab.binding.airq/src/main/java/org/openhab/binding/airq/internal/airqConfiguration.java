@@ -22,5 +22,7 @@ public class airqConfiguration {
     /**
      * Sample configuration parameter. Replace with your own.
      */
-    public String config1;
+    public String ipaddress;
+    public String password;
+
 }

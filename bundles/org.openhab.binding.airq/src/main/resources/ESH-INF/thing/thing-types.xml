@@ -5,28 +5,409 @@
 	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
 
 	<!-- Sample Thing Type -->
-	<thing-type id="sample">
-		<label>airq Binding Thing</label>
-		<description>Sample thing for airq Binding</description>
+	<thing-type id="airq">
+		<label>air-Q</label>
+		<description>Thing for air-Q Device</description>
+		<category>Sensor</category>
 
 		<channels>
-			<channel id="channel1" typeId="sample-channel" />
-		</channels>
+            <channel id="DeviceID" typeId="devid" />
+            <channel id="Status" typeId="status" />
+            <channel id="TypPS" typeId="typps" />
+            <channel id="bat" typeId="bat" />
+		    <channel id="cnt0_3" typeId="cnt0_3" />
+            <channel id="cnt0_5" typeId="cnt0_5" />
+            <channel id="cnt1" typeId="cnt1" />
+            <channel id="cnt2_5" typeId="cnt2_5" />
+            <channel id="cnt5" typeId="cnt5" />
+            <channel id="cnt10" typeId="cnt10" />
+            <channel id="co2" typeId="co2" />
+            <channel id="dCO2dt" typeId="dco2dt" /> 
+            <channel id="dHdt" typeId="dhdt" /> 
+            <channel id="dewpt" typeId="dewpt" /> 
+            <channel id="door_event" typeId="door" /> 
+            <channel id="health" typeId="health" /> 
+			<channel id="humidity" typeId="humidity" />
+            <channel id="humidity_abs" typeId="humidity_abs" />
+            <channel id="measuretime" typeId="mtime" />
+            <channel id="no2" typeId="no2" />
+            <channel id="o3" typeId="o3" />
+            <channel id="oxygen" typeId="oxygen" />
+            <channel id="performance" typeId="performance" />
+            <channel id="pm1" typeId="pm1" />
+            <channel id="pm2_5" typeId="pm2_5" />
+            <channel id="pm10" typeId="pm10" />
+ 			<channel id="pressure" typeId="pressure" />
+            <channel id="so2" typeId="so2" />
+            <channel id="sound" typeId="sound" />
+			<channel id="temperature" typeId="temperature" />
+            <channel id="timestamp" typeId="timestamp" />
+            <channel id="tvoc" typeId="tvoc" />
+            <channel id="uptime" typeId="uptime" />
+
+<!-- Maximum error -->
+            <channel id="bat_maxerr" typeId="bat_maxerr" />
+            <channel id="cnt0_3_maxerr" typeId="cnt0_3_maxerr" />
+            <channel id="cnt0_5_maxerr" typeId="cnt0_5_maxerr" />
+            <channel id="cnt1_maxerr" typeId="cnt1_maxerr" />
+            <channel id="cnt2_5_maxerr" typeId="cnt2_5_maxerr" />
+            <channel id="cnt5_maxerr" typeId="cnt5_maxerr" />
+            <channel id="cnt10_maxerr" typeId="cnt10_maxerr" />
+            <channel id="co2_maxerr" typeId="co2_maxerr" />
+            <channel id="dewpt_maxerr" typeId="dewpt_maxerr" /> 
+            <channel id="humidity_maxerr" typeId="humidity_maxerr" />
+            <channel id="humidity_abs_maxerr" typeId="humidity_abs_maxerr" />
+            <channel id="no2_maxerr" typeId="no2_maxerr" />
+            <channel id="o3_maxerr" typeId="o3_maxerr" />
+            <channel id="oxygen_maxerr" typeId="oxygen_maxerr" />
+            <channel id="pm1_maxerr" typeId="pm1_maxerr" />
+            <channel id="pm10_maxerr" typeId="pm10_maxerr" />
+            <channel id="pm2_5_maxerr" typeId="pm2_5_maxerr" />
+            <channel id="pressure_maxerr" typeId="pressure_maxerr" />
+            <channel id="so2_maxerr" typeId="so2_maxerr" />
+            <channel id="sound_maxerr" typeId="sound_maxerr" />
+            <channel id="temperature_maxerr" typeId="temperature_maxerr" />
+            <channel id="tvoc_maxerr" typeId="tvoc_maxerr" />
+ 		</channels>
 
 		<config-description>
-			<parameter name="config1" type="text" required="true">
-				<label>Sample Parameter</label>
-				<description>This is a sample text configuration parameter</description>
+			<parameter name="ipAddress" type="text" required="true">
+				<label>Network Address</label>
+				<description>The IP Network Address where the air-Q can be reached.</description>
 			</parameter>
+            <parameter name="password" type="text" required="true">
+                <label>Password of air-Q</label>
+                <description>The Password of the air-Q device.</description>
+            </parameter>
 		</config-description>
 
 	</thing-type>
 
-	<!-- Sample Channel Type -->
-	<channel-type id="sample-channel">
-		<item-type>airqItem</item-type>
-		<label>airq Binding Channel</label>
-		<description>Sample channel for airq Binding</description>
-	</channel-type>
+
+    <channel-type id="devid" advanced="true">
+        <item-type>String</item-type>
+        <label>Device ID</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    <channel-type id="status" advanced="true">
+        <item-type>String</item-type>
+        <label>Status of Sensors</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    <channel-type id="typps" advanced="true">
+        <item-type>Number</item-type>
+        <label>Average size of Fine Dust [experimental]</label>
+        <state readOnly="true" pattern="%.2f &#x03BC;m"></state>
+    </channel-type>
+    <channel-type id="bat" advanced="true">
+        <item-type>system.battery-level</item-type>
+        <label>Battery State</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    <channel-type id="cnt0_3">
+        <item-type>Number</item-type>
+        <label>Fine Dust >0,3 &#x03BC;m</label>
+        <state readOnly="true" pattern="%.0f"></state>
+    </channel-type>
+
+    <channel-type id="cnt0_5">
+        <item-type>Number</item-type>
+        <label>Fine Dust >0,5 &#x03BC;m</label>
+        <state readOnly="true" pattern="%.0f"></state>
+    </channel-type>
+
+    <channel-type id="cnt1">
+        <item-type>Number</item-type>
+        <label>Fine Dust >1 &#x03BC;m</label>
+        <state readOnly="true" pattern="%.0f"></state>
+    </channel-type>
+
+    <channel-type id="cnt2_5">
+        <item-type>Number</item-type>
+        <label>Fine Dust >2,5 &#x03BC;m</label>
+        <state readOnly="true" pattern="%.0f"></state>
+    </channel-type>
+
+    <channel-type id="cnt5">
+        <item-type>Number</item-type>
+        <label>Fine Dust >5 &#x03BC;m</label>
+        <state readOnly="true" pattern="%.0f"></state>
+    </channel-type>
+
+    <channel-type id="cnt10">
+        <item-type>Number</item-type>
+        <label>Fine Dust >10 &#x03BC;m</label>
+        <state readOnly="true" pattern="%.0f"></state>
+    </channel-type>
+
+    <channel-type id="co2">
+        <item-type>Number</item-type>
+        <label>CO2 Concentration</label>
+        <state readOnly="true" pattern="%.0f ppm"></state>
+    </channel-type>
+
+    <channel-type id="dco2dt">
+        <item-type>Number</item-type>
+        <label>Change of CO2 Concentration</label>
+        <state readOnly="true" pattern="%.2f ppm/s"></state>
+    </channel-type>
+
+    <channel-type id="dhdt">
+        <item-type>Number</item-type>
+        <label>Change of Humidity</label>
+        <state readOnly="true" pattern="%.2f g/m&#x00B3;/s"></state>
+    </channel-type>
+
+    <channel-type id="dewpt">
+        <item-type>Number:Temperature</item-type>
+        <label>Dew Point</label>
+        <state readOnly="true" pattern="%.3f %unit%"></state>
+    </channel-type>
+
+    <channel-type id="door" advanced="true">
+        <item-type>Number</item-type>
+        <label>Door Event (experimental)</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="health">
+        <item-type>Number</item-type>
+        <label>Health Index</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="humidity">
+        <item-type>Number</item-type>
+        <label>Humidity</label>
+        <state readOnly="true" pattern="%.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="humidity_abs">
+        <item-type>Number</item-type>
+        <label>Absolute Humidity</label>
+        <state readOnly="true" pattern="%.3f g/m&#x00B3;"></state>
+    </channel-type>
+
+    <channel-type id="mtime" advanced="true">
+        <item-type>Number</item-type>
+        <label>Time needed for measurement</label>
+        <state readOnly="true" pattern="%f ms"></state>
+    </channel-type>
+
+    <channel-type id="no2">
+        <item-type>Number</item-type>
+        <label>NO2 concentration</label>
+        <state readOnly="true" pattern="%.2f &#x03BC;g/m&#x00B3;"></state>
+    </channel-type>
+
+    <channel-type id="o3">
+        <item-type>Number</item-type>
+        <label>O3 concentration</label>
+        <state readOnly="true" pattern="%.2f &#x03BC;g/m&#x00B3;"></state>
+    </channel-type>
+
+    <channel-type id="oxygen">
+        <item-type>Number:Dimensionless</item-type>
+        <label>Oxygen concentration</label>
+        <state readOnly="true" pattern="%.3f %%"></state>
+    </channel-type>
+
+    <channel-type id="performance">
+        <item-type>Number</item-type>
+        <label>Performance Index</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="pm1">
+        <item-type>Number</item-type>
+        <label>Fine Dust Concentration >1&#x03BC;</label>
+        <state readOnly="true" pattern="%.0f &#x03BC;g/m&#x00B3;"></state>
+    </channel-type>
+
+    <channel-type id="pm10">
+        <item-type>Number</item-type>
+        <label>Fine Dust Concentration >10&#x03BC;</label>
+        <state readOnly="true" pattern="%.0f &#x03BC;g/m&#x00B3;"></state>
+    </channel-type>
+
+    <channel-type id="pm2_5">
+        <item-type>Number</item-type>
+        <label>Fine Dust Concentration >2,5&#x03BC;</label>
+        <state readOnly="true" pattern="%.0f &#x03BC;g/m&#x00B3;"></state>
+    </channel-type>
+
+    <channel-type id="pressure">
+        <item-type>Number</item-type>
+        <label>Pressure</label>
+        <state readOnly="true" pattern="%.2f hPa"></state>
+    </channel-type>
+
+    <channel-type id="so2">
+        <item-type>Number</item-type>
+        <label>SO2 concentration</label>
+        <state readOnly="true" pattern="%.2f &#x03BC;g/m&#x00B3;"></state>
+    </channel-type>
+
+    <channel-type id="sound">
+        <item-type>Number</item-type>
+        <label>Noise</label>
+        <state readOnly="true" pattern="%.1f db(A)"></state>
+    </channel-type>
+
+    <channel-type id="temperature">
+        <item-type>Number:Temperature</item-type>
+        <label>Temperature</label>
+        <state readOnly="true" pattern="%.2f %unit%"></state>
+    </channel-type>
+
+    <channel-type id="timestamp">
+        <item-type>DateTime</item-type>
+        <label>Time stamp</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="tvoc">
+        <item-type>Number</item-type>
+        <label>VOC concentration</label>
+        <state readOnly="true" pattern="%.0f ppb"></state>
+    </channel-type>
+
+    <channel-type id="uptime">
+        <item-type>Number</item-type>
+        <label>Uptime</label>
+        <state readOnly="true" pattern="%.0f s"></state>
+    </channel-type>
+
+<!--  Maximum error -->
+    <channel-type id="bat_maxerr" advanced="true">
+        <item-type>system.battery-level</item-type>
+        <label>'Maximum error' of Battery State, second value</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+    <channel-type id="cnt0_3_maxerr">
+        <item-type>Number:Dimensionless</item-type>
+        <label>Maximum error of Fine Dust >0,3 &#x03BC;m</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="cnt0_5_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Fine Dust >0,5 &#x03BC;m</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="cnt1_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Fine Dust >1 &#x03BC;m</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="cnt2_5_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Fine Dust >2,5 &#x03BC;m</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="cnt5_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Fine Dust >5 &#x03BC;m</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="cnt10_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Fine Dust >10 &#x03BC;m</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="co2_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of CO2 Concentration</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="dewpt_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Dew Point</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="humidity_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Humidity</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="humidity_abs_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Absolute Humidity</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="no2_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of NO2 concentration</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="o3_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of O3 concentration</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="oxygen_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Oxygen concentration</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="pm1_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Fine Dust Concentration >1&#x03BC;</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="pm10_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Fine Dust Concentration >10&#x03BC;</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="pm2_5_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Fine Dust Concentration >2,5&#x03BC;</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="pressure_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Pressure</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="so2_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of SO2 concentration</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="sound_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Noise</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="temperature_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of Temperature</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="tvoc_maxerr">
+        <item-type>Number</item-type>
+        <label>Maximum error of VOC concentration</label>
+        <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
 
 </thing:thing-descriptions>
