@@ -1,8 +1,8 @@
 # airq Binding
 
-_Give some details about what this binding is meant for - a protocol, system, specific device._
+The airq Binding integrates the air analyzer <a href="http://www.air-q.com">air-Q</a> device into the openHAB system. With the binding, it is possible to subscribe to all data delivered by the air-Q device.
 
-_If possible, provide some resources like pictures, a YouTube video, etc. to give an impression of what can be done with this binding. You can place such resources into a `doc` folder next to this README.md._
+<img src="https://uploads-ssl.webflow.com/5bd9feee2fb42232fe1d0196/5e4a8dc0e322ca33891b51e4_air-Q%20frontal-p-800.png" alt="air-Q image" width="400px" height="324px" />
 
 ## Supported Things
 
@@ -12,45 +12,60 @@ _Note that it is planned to generate some part of this based on the XML files wi
 
 ## Discovery
 
-_Describe the available auto-discovery features here. Mention for what it works and what needs to be kept in mind when using it._
+Auto-discovery is not possible in this version. Since the binding has to be configured at least with the password of the device, auto-discovery would be of limited value anyway.
 
 ## Binding Configuration
 
-_If your binding requires or supports general configuration settings, please create a folder ```cfg``` and place the configuration file ```<bindingId>.cfg``` inside it. In this section, you should link to this file and provide some information about the options. The file could e.g. look like:_
-
-```
-# Configuration for the Philips Hue Binding
-#
-# Default secret key for the pairing of the Philips Hue Bridge.
-# It has to be between 10-40 (alphanumeric) characters
-# This may be changed by the user for security reasons.
-secret=openHABSecret
-```
-
-_Note that it is planned to generate some part of this based on the information that is available within ```src/main/resources/ESH-INF/binding``` of your binding._
-
-_If your binding does not offer any generic configurations, you can remove this section completely._
+The binding does not need to be configured.
 
 ## Thing Configuration
 
-_Describe what is needed to manually configure a thing, either through the (Paper) UI or via a thing-file. This should be mainly about its mandatory and optional configuration parameters. A short example entry for a thing file can help!_
+In PaperUI, the air-Q thing must be configured with (both mandatory):
+<ul>
+<li>Network address, e.g. 192.168.0.68</li>
+<li>Password of the air-Q device</li>
+</ul>
+<img src="src/main/resources/configuration.png" />
 
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/ESH-INF/thing``` of your binding._
+The corresponding configuration in the .thing file will be explained later.
 
 ## Channels
 
-_Here you should provide information about available channel types, what their meaning is and how they can be used._
+The air-Q Thing offers access to all sensor data of the air-Q, according to its version. This includes also the Maximum Error per sensor value.
 
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/ESH-INF/thing``` of your binding._
+| channel      | type   | description                              |
+|--------------|--------|------------------------------------------|
+| DeviceID     | String | Individual ID of the device              |
+| Status       | String | Status of the sensors                    |
+| TypPS        | Number | Average size of Fine Dust [experimental] |
+| bat          | Number | Battery State                            |
+| cnt0_3       | Number | Fine Dust >0,3 &mu;-meter                |
+| cnt0_5       | Number | Fine Dust >0,5 mu-meter                  |
+| cnt1         | Number | Fine Dust >1 mu-meter                    |
+| cnt2_5       | Number | Fine Dust >2,5 mu-meter                  |
+| cnt5         | Number | Fine Dust >5 mu-meter                    |
+| cnt10        | Number | Fine Dust >10 mu-meter                   |
+| co2          | Number | This is the control channel              |
+| dCO2dt       | Number | This is the control channel              |
+| dHdt         | Number | This is the control channel              |
+| dewpt        | Number | This is the control channel              |
+| door_event   | Switch | This is the control channel              |
+| health       | Number | This is the control channel              |
+| humidity     | Number | This is the control channel              |
+| humidity_abs | Number | This is the control channel              |
+| measuretime  | Number | This is the control channel              |
+| no2          | Number | This is the control channel              |
+| o3           | Number | This is the control channel              |
+| oxygen       | Number | This is the control channel              |
+| performance  | Number | This is the control channel              |
+| pm1          | Number | This is the control channel              |
+| pm2_5        | Number | This is the control channel              |
+| pm10         | Number | This is the control channel              |
+| pressure     | Number | This is the control channel              |
+| so2          | Number | This is the control channel              |
+| sound        | Number | This is the control channel              |
+| temperature  | Number | This is the control channel              |
+| timestamp    | Time   | This is the control channel              |
+| tvoc         | Number | This is the control channel              |
+| uptime       | Number | uptime in seconds                        |
 
-| channel  | type   | description                  |
-|----------|--------|------------------------------|
-| control  | Switch | This is the control channel  |
-
-## Full Example
-
-_Provide a full usage example based on textual configuration files (*.things, *.items, *.sitemap)._
-
-## Any custom content here!
-
-_Feel free to add additional sections for whatever you think should also be mentioned about your binding!_
