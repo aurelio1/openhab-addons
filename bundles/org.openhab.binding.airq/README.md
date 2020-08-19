@@ -6,9 +6,8 @@ The airq Binding integrates the air analyzer <a href="http://www.air-q.com">air-
 
 ## Supported Things
 
-_Please describe the different supported things / devices within this section._
-_Which different types are supported, which models were tested etc.?_
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/ESH-INF/thing``` of your binding._
+One only Thing is supported: the air-Q device.
+This Binding was tested with an air-Q Pro device with 14 sensors. It should also work with an air-Q device with 11 sensors, but it was not tested yet.
 
 ## Discovery
 
@@ -58,7 +57,7 @@ The air-Q Thing offers access to all sensor data of the air-Q, according to its 
 | o3           | Number | O<sub>3</sub> concentration              |
 | oxygen       | Number | Oxygen concentration                     |
 | performance  | Number | Performance index                        |
-| pm1          | Number | Fine Dust concentration > 1&mu;m         |
+| pm1          | Number | Fine Dust concentration >1 &mu;m         |
 | pm2_5        | Number | Fine Dust concentration >2.5 &mu;m       |
 | pm10         | Number | Fine Dust concentration >10 &mu;m        |
 | pressure     | Number | Pressure                                 |
