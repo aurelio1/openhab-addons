@@ -39,33 +39,32 @@ The air-Q Thing offers access to all sensor data of the air-Q, according to its 
 | Status       | String | Status of the sensors                    |
 | TypPS        | Number | Average size of Fine Dust [experimental] |
 | bat          | Number | Battery State                            |
-| cnt0_3       | Number | Fine Dust >0,3 &mu;-meter                |
-| cnt0_5       | Number | Fine Dust >0,5 mu-meter                  |
-| cnt1         | Number | Fine Dust >1 mu-meter                    |
-| cnt2_5       | Number | Fine Dust >2,5 mu-meter                  |
-| cnt5         | Number | Fine Dust >5 mu-meter                    |
-| cnt10        | Number | Fine Dust >10 mu-meter                   |
-| co2          | Number | This is the control channel              |
-| dCO2dt       | Number | This is the control channel              |
-| dHdt         | Number | This is the control channel              |
-| dewpt        | Number | This is the control channel              |
-| door_event   | Switch | This is the control channel              |
-| health       | Number | This is the control channel              |
-| humidity     | Number | This is the control channel              |
-| humidity_abs | Number | This is the control channel              |
-| measuretime  | Number | This is the control channel              |
-| no2          | Number | This is the control channel              |
-| o3           | Number | This is the control channel              |
-| oxygen       | Number | This is the control channel              |
-| performance  | Number | This is the control channel              |
-| pm1          | Number | This is the control channel              |
-| pm2_5        | Number | This is the control channel              |
-| pm10         | Number | This is the control channel              |
-| pressure     | Number | This is the control channel              |
-| so2          | Number | This is the control channel              |
-| sound        | Number | This is the control channel              |
-| temperature  | Number | This is the control channel              |
-| timestamp    | Time   | This is the control channel              |
-| tvoc         | Number | This is the control channel              |
+| cnt0_3       | Number | Fine Dust >0,3 &mu;m                     |
+| cnt0_5       | Number | Fine Dust >0,5 &mu;m                     |
+| cnt1         | Number | Fine Dust >1 &mu;m                       |
+| cnt2_5       | Number | Fine Dust >2,5 &mu;m                     |
+| cnt5         | Number | Fine Dust >5 &mu;m                       |
+| cnt10        | Number | Fine Dust >10 &mu;m                      |
+| co2          | Number | CO<sub>2</sub> concentration             |
+| dCO2dt       | Number | Change of CO<sub>2</sub> concentration   |
+| dHdt         | Number | Change of Humidity                       |
+| dewpt        | Number | Dew Point                                |
+| door_event   | Switch | Door Event (experimental)                |
+| health       | Number | Health Index                             |
+| humidity     | Number | Humidity in percent                      |
+| humidity_abs | Number | Absolute Humidity                        |
+| measuretime  | Number | Milliseconds needed for measurement      |
+| no2          | Number | NO<sub>2</sub> concentration             |
+| o3           | Number | O<sub>3</sub> concentration              |
+| oxygen       | Number | Oxygen concentration                     |
+| performance  | Number | Performance index                        |
+| pm1          | Number | Fine Dust concentration > 1&mu;m         |
+| pm2_5        | Number | Fine Dust concentration >2.5 &mu;m       |
+| pm10         | Number | Fine Dust concentration >10 &mu;m        |
+| pressure     | Number | Pressure                                 |
+| so2          | Number | SO<sub>2</sub> concentration             |
+| sound        | Number | Noise                                    |
+| temperature  | Number | Temperature                              |
+| timestamp    | Time   | Timestamp of measurement                 |
+| tvoc         | Number | VOC concentration                        |
 | uptime       | Number | uptime in seconds                        |
-
