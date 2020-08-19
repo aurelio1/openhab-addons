@@ -89,21 +89,25 @@
         <label>Device ID</label>
         <state readOnly="true"></state>
     </channel-type>
+    
     <channel-type id="status" advanced="true">
         <item-type>String</item-type>
         <label>Status of Sensors</label>
         <state readOnly="true"></state>
     </channel-type>
+    
     <channel-type id="typps" advanced="true">
         <item-type>Number</item-type>
         <label>Average size of Fine Dust [experimental]</label>
         <state readOnly="true" pattern="%.2f &#x03BC;m"></state>
     </channel-type>
+    
     <channel-type id="bat" advanced="true">
         <item-type>system.battery-level</item-type>
         <label>Battery State</label>
         <state readOnly="true"></state>
     </channel-type>
+    
     <channel-type id="cnt0_3">
         <item-type>Number</item-type>
         <label>Fine Dust >0,3 &#x03BC;m</label>
