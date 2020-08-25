@@ -45,6 +45,7 @@ import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
+import org.eclipse.smarthome.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,6 @@ public class airqHandler extends BaseThingHandler {
 
     private final Logger logger = LoggerFactory.getLogger(airqHandler.class);
     private @Nullable ScheduledFuture<?> pollingJob;
-    private @Nullable airqConfiguration config;
 
     public airqHandler(Thing thing) {
         super(thing);
@@ -87,9 +87,7 @@ public class airqHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
-        logger.debug("air-Q - airqHandler - initialize() called");
-        config = getConfigAs(airqConfiguration.class);
-        logger.debug("air-Q - airqHandler - initialize: ipaddress={}, password={}",
+        logger.debug("air-Q - airqHandler - initialize(): ipaddress={}, password={}",
                 getThing().getConfiguration().get("ipAddress"), getThing().getConfiguration().get("password"));
         // TODO: Initialize the handler.
         // The framework requires you to return from this method quickly. Also, before leaving this method a thing
@@ -133,11 +131,10 @@ public class airqHandler extends BaseThingHandler {
                     return maxdev;
                 }
 
+                // ResultPair() expects a string formed as this: [1234,56,789,012] and gives back a ResultPair
+                // consisting of the two numbers
                 public ResultPair(String input) {
                     value = new Float(input.substring(1, input.indexOf(',')));
-                    int pos1 = input.indexOf(',') + 1;
-                    int pos2 = input.length() - 1;
-                    String substr = input.substring(input.indexOf(',') + 1, input.length() - 1);
                     maxdev = new Float(input.substring(input.indexOf(',') + 1, input.length() - 1));
                 }
             }
@@ -146,8 +143,8 @@ public class airqHandler extends BaseThingHandler {
                 logger.trace("air-Q - airqHandler - processPair(): dec={}, name={}", dec, name);
                 if (dec.get(name) == null) {
                     logger.trace("air-Q - airqHandler - processPair(): get({}) is null", name);
-                    updateState(name, new DecimalType(-1));
-                    updateState(name, new DecimalType(-1));
+                    updateState(name, UnDefType.UNDEF);
+                    updateState(name, UnDefType.UNDEF);
 
                 } else {
                     ResultPair pair = new ResultPair(dec.get(name).toString());
