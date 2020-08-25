@@ -143,9 +143,17 @@ public class airqHandler extends BaseThingHandler {
             }
 
             private void processPair(JsonObject dec, String name) {
-                ResultPair pair = new ResultPair(dec.get(name).toString());
-                updateState(name, new DecimalType(pair.getvalue()));
-                updateState(name + "_maxerr", new DecimalType(pair.getmaxdev()));
+                logger.trace("air-Q - airqHandler - processPair(): dec={}, name={}", dec, name);
+                if (dec.get(name) == null) {
+                    logger.trace("air-Q - airqHandler - processPair(): get({}) is null", name);
+                    updateState(name, new DecimalType(-1));
+                    updateState(name, new DecimalType(-1));
+
+                } else {
+                    ResultPair pair = new ResultPair(dec.get(name).toString());
+                    updateState(name, new DecimalType(pair.getvalue()));
+                    updateState(name + "_maxerr", new DecimalType(pair.getmaxdev()));
+                }
             }
 
             @Override
