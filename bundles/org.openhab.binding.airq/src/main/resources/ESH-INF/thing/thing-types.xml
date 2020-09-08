@@ -68,7 +68,54 @@
             <channel id="sound_maxerr" typeId="sound_maxerr" />
             <channel id="temperature_maxerr" typeId="temperature_maxerr" />
             <channel id="tvoc_maxerr" typeId="tvoc_maxerr" />
- 		</channels>
+
+<!--  configuration data -->
+            <channel id="Wifi" typeId="Wifi" />
+            <channel id="WIFIssid" typeId="WIFIssid" />
+            <channel id="WIFIpass" typeId="WIFIpass" />
+            <channel id="WIFIbssid" typeId="WIFIbssid" />
+            <channel id="WLANssid" typeId="WLANssid" />
+            <channel id="pass" typeId="pass" />
+            <channel id="WifiInfo" typeId="WifiInfo" />
+            <channel id="TimeServer" typeId="Timeserver" />
+            <channel id="geopos" typeId="geopos" />
+            <channel id="nightmode_StartDay" typeId="nightmode_StartDay" />
+            <channel id="nightmode_StartNight" typeId="nightmode_StartNight" />
+            <channel id="nightmode_BrightnessDay" typeId="nightmode_BrightnessDay" />
+            <channel id="nightmode_BrightnessNight" typeId="nightmode_BrightnessNight" />
+            <channel id="nightmode_FanNightOff" typeId="nightmode_FanNightOff" />
+            <channel id="nightmode_WifiNightOff" typeId="nightmode_WifiNightOff" />
+            <channel id="devicename" typeId="devicename" />
+            <channel id="RoomType" typeId="RoomType" />
+            <channel id="logging" typeId="Logging" />
+            <channel id="DeleteKey" typeId="DeleteKey" />
+            <channel id="FireAlarm" typeId="FireAlarm" />
+            <channel id="air-Q-Hardware-Version" typeId="air-Q-Hardware-Version" />
+            <channel id="WLAN_config_Gateway" typeId="WLAN_config_Gateway" />
+            <channel id="WLAN_config_MAC" typeId="WLAN_config_MAC" />
+            <channel id="WLAN_config_SSID" typeId="WLAN_config_SSID" />
+            <channel id="WLAN_config_IPAddress" typeId="WLAN_config_IPAddress" />
+            <channel id="WLAN_config_NetMask" typeId="WLAN_config_NetMask" />
+            <channel id="WLAN_config_BSSID" typeId="WLAN_config_BSSID" />
+            <channel id="cloudUpload" typeId="cloudUpload" />
+            <channel id="SecondsMeasurementDelay" typeId="SecondsMeasurementDelay" />
+            <channel id="Rejection" typeId="Rejection" />
+            <channel id="air-Q-Software-Version" typeId="air-Q-Software-Version" />
+            <channel id="sensors" typeId="sensors" />
+            <channel id="AutoDriftCompensation" typeId="AutoDriftCompensation" />
+            <channel id="AutoUpdate" typeId="AutoUpdate" />
+            <channel id="AdvancedDataProcessing" typeId="AdvancedDataProcessing" />
+            <channel id="Industry" typeId="Industry" />
+            <channel id="ppm_and_ppb" typeId="ppm_and_ppb" />
+            <channel id="id" typeId="id" />
+            <channel id="SoundInfo" typeId="SoundInfo" />
+            <channel id="AlarmForwarding" typeId="AlarmForwarding" />
+            <channel id="usercalib" typeId="usercalib" />
+            <channel id="InitialCalFinished" typeId="InitialCalFinished" />
+            <channel id="Averaging" typeId="Averaging" />
+            <channel id="SensorInfo" typeId="SensorInfo" />
+            <channel id="ErrorBars" typeId="ErrorBars" />
+       </channels>
 
 		<config-description>
 			<parameter name="ipAddress" type="text" required="true">
@@ -103,7 +150,7 @@
     </channel-type>
     
     <channel-type id="bat" advanced="true">
-        <item-type>system.battery-level</item-type>
+        <item-type>Number</item-type>
         <label>Battery State</label>
         <state readOnly="true"></state>
     </channel-type>
@@ -412,6 +459,276 @@
         <item-type>Number</item-type>
         <label>Maximum error of VOC concentration</label>
         <state readOnly="true" pattern="&#x00B1; %.2f %%"></state>
+    </channel-type>
+  
+    <channel-type id="Wifi" advanced="true">
+        <item-type>Switch</item-type>
+        <label>WLAN on or off</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WIFIssid" advanced="true">
+        <item-type>String</item-type>
+        <label>Network SSID</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WIFIpass" advanced="true">
+        <item-type>String</item-type>
+        <label>Wifi Password</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WIFIbssid" advanced="true">
+        <item-type>String</item-type>
+        <label>Network BSSID</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WLANssid" advanced="true">
+        <item-type>String</item-type>
+        <label>WLAN SSID</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="pass" advanced="true">
+        <item-type>String</item-type>
+        <label>Device Password</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WifiInfo" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Show WLAN status with LED</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="Timeserver" advanced="true">
+        <item-type>String</item-type>
+        <label>Name of Timeserver address</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="geopos" advanced="true">
+        <item-type>Location</item-type>
+        <label>Location of air-Q device</label>
+        <state readOnly="true"></state>
+    </channel-type>
+      
+    <channel-type id="nightmode_StartDay" advanced="true">
+        <item-type>DateTime</item-type>
+        <label>Time to start day operation</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="nightmode_StartNight" advanced="true">
+        <item-type>DateTime</item-type>
+        <label>End of day operation</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="nightmode_BrightnessDay" advanced="true">
+        <item-type>Number</item-type>
+        <label>Brightness of LED during the day</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="nightmode_BrightnessNight" advanced="true">
+        <item-type>Number</item-type>
+        <label>Brightness of LED at night</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="nightmode_FanNightOff" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Switch off fan at night</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="nightmode_WifiNightOff" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Switch off WLAN at night</label>
+        <state readOnly="true"></state>
+    </channel-type>
+     
+    <channel-type id="devicename" advanced="true">
+        <item-type>String</item-type>
+        <label>Device Name</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="RoomType" advanced="true">
+        <item-type>String</item-type>
+        <label>Type of room</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="Logging" advanced="true">
+        <item-type>String</item-type>
+        <label>Logging level</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="DeleteKey" advanced="true">
+        <item-type>String</item-type>
+        <label>Settings to be deleted</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="FireAlarm" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Send Fire Alarm if certain levels are met</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="air-Q-Hardware-Version" advanced="true">
+        <item-type>String</item-type>
+        <label>Hardware version</label>
+        <state readOnly="true"></state>
+    </channel-type>
+      
+    <channel-type id="WLAN_config_Gateway" advanced="true">
+        <item-type>String</item-type>
+        <label>Network Gateway</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WLAN_config_MAC" advanced="true">
+        <item-type>String</item-type>
+        <label>MAC Address</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WLAN_config_SSID" advanced="true">
+        <item-type>String</item-type>
+        <label>WLAN SSID</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WLAN_config_IPAddress" advanced="true">
+        <item-type>String</item-type>
+        <label>Assigned IP address</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WLAN_config_NetMask" advanced="true">
+        <item-type>String</item-type>
+        <label>Network mask</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="WLAN_config_BSSID" advanced="true">
+        <item-type>String</item-type>
+        <label>Network BSSID</label>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="cloudUpload" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Upload to air-q cloud</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="SecondsMeasurementDelay" advanced="true">
+        <item-type>Number</item-type>
+        <label>Rhythm of measurement for historic average</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="Rejection" advanced="true">
+        <item-type>String</item-type>
+        <label>Power Frequency</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="air-Q-Software-Version" advanced="true">
+        <item-type>String</item-type>
+        <label>Firmware version</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="sensors" advanced="true">
+        <item-type>String</item-type>
+        <label>Details about sensors</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="AutoDriftCompensation" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Compensate automatic drift</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="AutoUpdate" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Install Firmware updates automatically</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="AdvancedDataProcessing" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Use advanced algorithms eg. for open window or presence of a person</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="Industry" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Network BSSID</label>
+        <state readOnly="true"></state>
+    </channel-type>
+ 
+    <channel-type id="ppm_and_ppb" advanced="true">
+        <item-type>Switch</item-type>
+        <label>???</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="id" advanced="true">
+        <item-type>String</item-type>
+        <label>???</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="SoundInfo" advanced="true">
+        <item-type>Switch</item-type>
+        <label>???</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="AlarmForwarding" advanced="true">
+        <item-type>Switch</item-type>
+        <label>???</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="usercalib" advanced="true">
+        <item-type>String</item-type>
+        <label>Last sensor calibration</label>
+        <state readOnly="true"></state>
+    </channel-type>
+ 
+    <channel-type id="InitialCalFinished" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Initial calibration has finished</label>
+        <state readOnly="true"></state>
+    </channel-type>
+ 
+    <channel-type id="Averaging" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Do an average</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="SensorInfo" advanced="true">
+        <item-type>String</item-type>
+        <label>Information about the sensors</label>
+        <state readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="ErrorBars" advanced="true">
+        <item-type>Switch</item-type>
+        <label>Calculate Maximum Errors</label>
+        <state readOnly="true"></state>
     </channel-type>
 
 </thing:thing-descriptions>

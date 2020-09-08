@@ -64,13 +64,12 @@ public class airqHandlerFactory extends BaseThingHandlerFactory {
     @Override
     public @Nullable Thing createThing(ThingTypeUID thingTypeUID, Configuration configuration,
             @Nullable ThingUID thingUID, @Nullable ThingUID bridgeUID) {
-        logger.warn("air-Q: airqHandlerFactory - createThing: started, create Thing for Type {}", thingUID);
-
-        String ipaddress = (String) configuration.get("ipaddress");
-
-        logger.warn("air-Q - airqHandlerFactory - createThing: ipaddress={}", ipaddress);
-
-        return super.createThing(thingTypeUID, configuration, thingUID, bridgeUID);
+        logger.trace(
+                "air-Q - airqHandlerFactory - createThing: start with thingTypeUID={}, configuration={}, thingUID={}, bridgeUID={}",
+                thingTypeUID, configuration, thingUID, bridgeUID);
+        Thing th = super.createThing(thingTypeUID, configuration, thingUID, bridgeUID);
+        logger.trace("air-Q - airqHandlerFactory - createThing: result Thing={}", th);
+        return th;
         /*
          * if (airqBindingConstants.THING_TYPE_UID_BRIDGE.equals(thingTypeUID)) {
          * logger.warn("Create Bridge: {}", adapterID);
