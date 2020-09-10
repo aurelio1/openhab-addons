@@ -478,6 +478,7 @@ public class airqHandler extends BaseThingHandler {
                     Float latitude = json_coord.get("lat").getAsFloat();
                     Float longitude = json_coord.get("long").getAsFloat();
                     updateState(channelName, new PointType(new DecimalType(latitude), new DecimalType(longitude)));
+                    break;
                 default:
                     break;
             }
