@@ -133,7 +133,7 @@
 
     <channel-type id="devid" advanced="true">
         <item-type>String</item-type>
-        <label>Device ID</label>
+        <label>Device ID, retrieved from Data</label>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -679,25 +679,25 @@
  
     <channel-type id="ppm_and_ppb" advanced="true">
         <item-type>Switch</item-type>
-        <label>???</label>
+        <label>Output CO as ppm and NO2, O3 and SO2 as ppb value instead of mg/m3</label>
         <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="id" advanced="true">
         <item-type>String</item-type>
-        <label>???</label>
+        <label>Device ID, retrieved from configuration</label>
         <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="SoundInfo" advanced="true">
         <item-type>Switch</item-type>
-        <label>???</label>
+        <label>Sound Info</label>
         <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="AlarmForwarding" advanced="true">
         <item-type>Switch</item-type>
-        <label>???</label>
+        <label>Forward gas or fire alarm to other air-Q devices in the household</label>
         <state readOnly="true"></state>
     </channel-type>
 
