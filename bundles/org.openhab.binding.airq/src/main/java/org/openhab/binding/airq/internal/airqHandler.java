@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -374,47 +376,38 @@ public class airqHandler extends BaseThingHandler {
                         JsonElement decEl = gson.fromJson(jsonAnswer, JsonElement.class);
                         JsonObject decObj = decEl.getAsJsonObject();
                         logger.trace("air-Q - airqHandler - processConfigData(): decObj={}", decObj);
-                        processType(decObj, "WIFI", "WIFI", "boolean");
+                        processType(decObj, "Wifi", "Wifi", "boolean");
                         processType(decObj, "WIFIssid", "WIFIssid", "string");
                         processType(decObj, "WIFIpass", "WIFIpass", "string");
                         processType(decObj, "WIFIbssid", "WIFIbssid", "string");
-                        processType(decObj, "WLANssid", "WLANssid", "string");
+                        processType(decObj, "WLANssid", "WLANssid", "arr");
                         processType(decObj, "pass", "pass", "string");
                         processType(decObj, "WifiInfo", "WifiInfo", "boolean");
-                        processType(decObj, "Timeserver", "Timeserver", "boolean");
+                        processType(decObj, "TimeServer", "TimeServer", "string");
                         processType(decObj, "geopos", "geopos", "coord");
-                        processType(decObj, "nightmode_StartDay", "nightmode_StartDay", "time");
-                        processType(decObj, "nightmode_StartNight", "nightmode_StartNight", "time");
-                        processType(decObj, "nightmode_BrightnessDay", "nightmode_BrightnessDay", "time");
-                        processType(decObj, "nightmode_BrightnessNight", "nightmode_BrightnessNight", "time");
-                        processType(decObj, "nightmode_FanNightOff", "nightmode_FanNightOff", "boolean");
-                        processType(decObj, "nightmode_WifiNightOff", "nightmode_WifiNightOff", "boolean");
+                        processType(decObj, "NightMode", "", "nightmode");
                         processType(decObj, "devicename", "devicename", "string");
                         processType(decObj, "RoomType", "RoomType", "string");
                         processType(decObj, "Logging", "Logging", "string");
                         processType(decObj, "DeleteKey", "DeleteKey", "string");
                         processType(decObj, "FireAlarm", "FireAlarm", "boolean");
                         processType(decObj, "air-Q-Hardware-Version", "air-Q-Hardware-Version", "string");
-                        processType(decObj, "WLAN_config_Gateway", "WLAN_config_Gateway", "string");
-                        processType(decObj, "WLAN_config_MAC", "WLAN_config_MAC", "string");
-                        processType(decObj, "WLAN_config_SSID", "WLAN_config_SSID", "string");
-                        processType(decObj, "WLAN_config_IPAddress", "WLAN_config_IPAddress", "string");
-                        processType(decObj, "WLAN_config_NetMask", "WLAN_config_NetMask", "string");
-                        processType(decObj, "WLAN_config_BSSID", "WLAN_config_BSSID", "string");
+                        processType(decObj, "WLAN config", "", "wlan");
                         processType(decObj, "cloudUpload", "cloudUpload", "boolean");
                         processType(decObj, "SecondsMeasurementDelay", "SecondsMeasurementDelay", "number");
                         processType(decObj, "Rejection", "Rejection", "string");
                         processType(decObj, "air-Q-Software-Version", "air-Q-Software-Version", "string");
-                        processType(decObj, "sensors", "sensors", "string");
+                        processType(decObj, "sensors", "sensors", "arr");
                         processType(decObj, "AutoDriftCompensation", "AutoDriftCompensation", "boolean");
                         processType(decObj, "AutoUpdate", "AutoUpdate", "boolean");
                         processType(decObj, "AdvancedDataProcessing", "AdvancedDataProcessing", "boolean");
                         processType(decObj, "Industry", "Industry", "boolean");
                         processType(decObj, "ppm&ppb", "ppm_and_ppb", "boolean");
+                        processType(decObj, "GasAlarm", "GasAlarm", "boolean");
                         processType(decObj, "id", "id", "string");
                         processType(decObj, "SoundInfo", "SoundInfo", "boolean");
                         processType(decObj, "AlarmForwarding", "AlarmForwarding", "boolean");
-                        processType(decObj, "usercalib", "usercalib", "string");
+                        processType(decObj, "usercalib", "usercalib", "calib");
                         processType(decObj, "InitialCalFinished", "InitialCalFinished", "boolean");
                         processType(decObj, "Averaging", "Averaging", "boolean");
                         processType(decObj, "SensorInfo", "SensorInfo", "string");
@@ -470,15 +463,78 @@ public class airqHandler extends BaseThingHandler {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
                     String timestampString = sdf.format(new Date(timest));
                     updateState(channelName, DateTimeType.valueOf(timestampString));
+                    logger.trace("air-Q - airqHandler - processType(): channel {} set to {} (original: {})",
+                            channelName, timestampString, timest);
                     break;
                 case "coord":
-                    Gson gson_coord = new Gson();
-                    JsonElement ans_coord = gson_coord.fromJson(dec.get(airqName).toString(), JsonElement.class);
+                    JsonElement ans_coord = new Gson().fromJson(dec.get(airqName).toString(), JsonElement.class);
                     JsonObject json_coord = ans_coord.getAsJsonObject();
                     Float latitude = json_coord.get("lat").getAsFloat();
                     Float longitude = json_coord.get("long").getAsFloat();
                     updateState(channelName, new PointType(new DecimalType(latitude), new DecimalType(longitude)));
                     break;
+                case "nightmode":
+                    JsonElement daynightdata = new Gson().fromJson(dec.get(airqName).toString(), JsonElement.class);
+                    JsonObject json_daynightdata = daynightdata.getAsJsonObject();
+                    processType(json_daynightdata, "StartDay", "nightmode_StartDay", "string");
+                    processType(json_daynightdata, "StartNight", "nightmode_StartNight", "string");
+                    processType(json_daynightdata, "BrightnessDay", "nightmode_BrightnessDay", "number");
+                    processType(json_daynightdata, "BrightnessNight", "nightmode_BrightnessNight", "number");
+                    processType(json_daynightdata, "FanNightOff", "nightmode_FanNightOff", "boolean");
+                    processType(json_daynightdata, "WifiNightOff", "nightmode_WifiNightOff", "boolean");
+                    break;
+                case "wlan":
+                    JsonElement wlandata = new Gson().fromJson(dec.get(airqName).toString(), JsonElement.class);
+                    JsonObject json_wlandata = wlandata.getAsJsonObject();
+                    processType(json_wlandata, "Gateway", "WLAN_config_Gateway", "string");
+                    processType(json_wlandata, "MAC", "WLAN_config_MAC", "string");
+                    processType(json_wlandata, "SSID", "WLAN_config_SSID", "string");
+                    processType(json_wlandata, "IP address", "WLAN_config_IPAddress", "string");
+                    processType(json_wlandata, "Net Mask", "WLAN_config_NetMask", "string");
+                    processType(json_wlandata, "BSSID", "WLAN_config_BSSID", "string");
+                    break;
+                case "arr":
+                    JsonElement jsonarr = new Gson().fromJson(dec.get(airqName).toString(), JsonElement.class);
+                    if (jsonarr.isJsonArray()) {
+                        JsonArray arr = jsonarr.getAsJsonArray();
+                        String str = new String();
+                        for (JsonElement el : arr) {
+                            str = str.concat(el.getAsString()).concat(", ");
+                        }
+                        logger.trace("air-Q - airqHandler - processType(): channel {} set to {}", channelName,
+                                str.substring(0, str.length() - 2));
+                        updateState(channelName, new StringType(str.substring(0, str.length() - 2)));
+                    } else {
+                        logger.error("air-Q - airqHandler - processType(): cannot handle this as an array: {}",
+                                jsonarr);
+                    }
+                    break;
+                case "calib":
+                    JsonElement lastcalib = new Gson().fromJson(dec.get(airqName).toString(), JsonElement.class);
+                    JsonObject calibobj = lastcalib.getAsJsonObject();
+                    String str = new String();
+                    Long timecalib;
+                    SimpleDateFormat sdfcalib = new SimpleDateFormat("dd.MM.yyyy' 'HH:mm:ss");
+                    for (Entry<String, JsonElement> entry : calibobj.entrySet()) {
+                        String attributeName = entry.getKey();
+                        JsonObject attributeValue = (JsonObject) entry.getValue();
+                        timecalib = new Long(attributeValue.get("timestamp").toString());
+                        String timecalibString = sdfcalib.format(new Date(timecalib * 1000));
+                        str = str.concat(attributeName).concat(": offset=")
+                                .concat(attributeValue.get("offset").getAsString()).concat(" [").concat(timecalibString)
+                                .concat("]");
+                    }
+                    logger.trace("air-Q - airqHandler - processType(): channel {} set to {}", channelName,
+                            str.substring(0, str.length() - 1));
+                    updateState(channelName, new StringType(str.substring(0, str.length() - 1)));
+                    break;
+                // JsonArray calibarr = lastcalib.getAsJsonArray();
+                // logger.trace("air-Q - airqHandler - processType(): calibarr={}, isarr={}", lastcalib,
+                // lastcalib.isJsonArray());
+                // for (JsonElement el : calibarr) {
+                // logger.trace("air-Q - airqHandler - processType(): lastcalib element {}", el);
+
+                // }
                 default:
                     break;
             }
