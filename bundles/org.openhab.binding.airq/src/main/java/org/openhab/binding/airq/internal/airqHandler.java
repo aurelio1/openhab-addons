@@ -12,8 +12,6 @@
  */
 package org.openhab.binding.airq.internal;
 
-import static org.openhab.binding.airq.internal.airqBindingConstants.CHANNEL_1;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +20,7 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
@@ -73,6 +72,8 @@ public class airqHandler extends BaseThingHandler {
     private @Nullable String ipaddress;
     private @Nullable String password;
     private @Nullable ThingStatus thStatus;
+    protected static final int POLLING_PERIOD_DATA = 15000; // in milliseconds
+    protected static final int POLLING_PERIOD_CONFIG = 1; // in minutes
 
     final class ResultPair {
         private final float value;
@@ -98,20 +99,93 @@ public class airqHandler extends BaseThingHandler {
         super(thing);
     }
 
+    public Boolean ohCmd2airqCmd(String ohcmd) {
+        switch (ohcmd) {
+            case "ON":
+                return true;
+            case "OFF":
+                return false;
+        }
+        return false;
+    }
+
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        if (CHANNEL_1.equals(channelUID.getId())) {
-            if (command instanceof RefreshType) {
+        logger.trace(
+                "air-Q - airqHandler - handleCommand(): request received to handle value {} command {} of channelUID={}",
+                command, command.getClass(), channelUID);
+        if (command instanceof OnOffType) {
+            JsonObject newobj = new JsonObject();
+            JsonObject subjson = new JsonObject();
+            switch (channelUID.getId()) {
+                case "Wifi":
+                    break; // we do not allow Wifi because otherwise we can't connect to the air-Q device anymore
+                case "WifiInfo":
+                case "FireAlarm":
+                case "cloudUpload":
+                case "AutoDriftCompensation":
+                case "AutoUpdate":
+                case "AdvancedDataProcessing":
+                case "GasAlarm":
+                case "SoundInfo":
+                case "AlarmForwarding":
+                case "Averaging":
+                case "ErrorBars":
+                    newobj.addProperty(channelUID.getId(), ohCmd2airqCmd(command.toString()));
+                    changeSettings(newobj);
+                    break;
+                case "ppm_and_ppb":
+                    newobj.addProperty("ppm&ppb", ohCmd2airqCmd(command.toString()));
+                    changeSettings(newobj);
+                case "nightmode_FanNightOff":
+                    subjson.addProperty("FanNightOff", ohCmd2airqCmd(command.toString()));
+                    newobj.add("NightMode", subjson);
+                    changeSettings(newobj);
+                    break;
+                case "nightmode_WifiNightOff":
+                    subjson.addProperty("WifiNightOff", ohCmd2airqCmd(command.toString()));
+                    newobj.add("NightMode", subjson);
+                    changeSettings(newobj);
+                    break;
+                // TODO
+                case "TimeServer":
+                    break;
+                case "geopos":
+                    break;
+                case "nightmode_StartDay":
+                    break;
+                case "nightmode_StartNight":
+                    break;
+                case "nightmode_BrightnessDay":
+                    break;
+                case "nightmode_BrightnessNight":
+                    break;
+                case "RoomType":
+                    break;
+                case "Logging":
+                    break;
+                case "SecondsMeasurementDelay":
+                    break;
+                case "Rejection":
+                    break;
+                default:
+                    logger.error(
+                            "air-Q - airqHandler - handleCommand(): unknown OnOffType request received (channelUID={}, value={})",
+                            channelUID, command);
+            }
+        } else if (command instanceof RefreshType) {
+            if (pollingJob != null) {
+                // pollingJob.notify();
                 // TODO: handle data refresh
             }
-
-            // TODO: handle command
-
-            // Note: if communication with thing fails for some reason,
-            // indicate that by setting the status with detail information:
-            // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
-            // "Could not control device at IP address x.x.x.x");
         }
+
+        // TODO: handle command
+
+        // Note: if communication with thing fails for some reason,
+        // indicate that by setting the status with detail information:
+        // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
+        // "Could not control device at IP address x.x.x.x");
     }
 
     @Override
@@ -161,7 +235,7 @@ public class airqHandler extends BaseThingHandler {
             @Override
             public void run() {
                 Result res = null;
-                logger.trace("air-Q - airqHandler - run(): starting polled handler");
+                logger.trace("air-Q - airqHandler - run(): starting polled data handler");
                 if ((ipaddress != null) && (password != null)) {
                     try {
                         String url = "http://".concat(ipaddress.concat("/data"));
@@ -189,7 +263,7 @@ public class airqHandler extends BaseThingHandler {
                             Gson gson = new Gson();
                             JsonElement ans = gson.fromJson(jsontext, JsonElement.class);
                             JsonObject jsonObj = ans.getAsJsonObject();
-                            String jsonAnswer = decode(jsonObj.get("content").getAsString().getBytes(),
+                            String jsonAnswer = decrypt(jsonObj.get("content").getAsString().getBytes(),
                                     (String) (getThing().getConfiguration().get("password")));
                             JsonElement decEl = gson.fromJson(jsonAnswer, JsonElement.class);
                             JsonObject decObj = decEl.getAsJsonObject();
@@ -237,8 +311,8 @@ public class airqHandler extends BaseThingHandler {
 
         };
 
-        pollingJob = scheduler.scheduleAtFixedRate(pollData, 0, 15000, TimeUnit.MILLISECONDS);
-        getConfigDataJob = scheduler.scheduleAtFixedRate(getConfigData, 0, 1, TimeUnit.MINUTES);
+        pollingJob = scheduler.scheduleAtFixedRate(pollData, 0, POLLING_PERIOD_DATA, TimeUnit.MILLISECONDS);
+        getConfigDataJob = scheduler.scheduleAtFixedRate(getConfigData, 0, POLLING_PERIOD_CONFIG, TimeUnit.MINUTES);
 
         // Note: When initialization can NOT be done set the status with more details for further
         // analysis. See also class ThingStatusDetail for all available status details.
@@ -249,19 +323,19 @@ public class airqHandler extends BaseThingHandler {
     }
 
     // AES decoding based on this tutorial: https://www.javainterviewpoint.com/aes-256-encryption-and-decryption/
-    public String decode(byte[] base64text, String password) {
+    public String decrypt(byte[] base64text, String password) {
         String content = "";
-        logger.trace("air-Q - airqHandler - decode(): content BEFORE Base64={}", base64text);
+        logger.trace("air-Q - airqHandler - decrypt(): content to decypt: {}", base64text);
         byte[] encodedtextwithIV = Base64.getDecoder().decode(base64text);
-        logger.trace("air-Q - airqHandler - decode(): content AFTER Base64={}", encodedtextwithIV);
         byte[] ciphertext = Arrays.copyOfRange(encodedtextwithIV, 16, encodedtextwithIV.length);
         byte[] passkey = Arrays.copyOf(password.getBytes(), 32);
         if (password.length() < 32) {
             Arrays.fill(passkey, password.length(), 32, (byte) '0');
         }
         byte[] IV = Arrays.copyOf(encodedtextwithIV, 16);
-        logger.trace("air-Q - airqHandler - decode(): passkey={}, IV={}", passkey, IV);
-        logger.trace("air-Q - airqHandler - decode(): encodedtext={}", ciphertext);
+        // logger.trace("air-Q - airqHandler - decrypt(): passkey={}", passkey);
+        // logger.trace("air-Q - airqHandler - decrypt(): IV={}", IV);
+        // logger.trace("air-Q - airqHandler - decrypt(): text to decode: {}", ciphertext);
         SecretKey seckey = new SecretKeySpec(passkey, 0, passkey.length, "AES");
         try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -270,9 +344,39 @@ public class airqHandler extends BaseThingHandler {
             cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
             byte[] decryptedText = cipher.doFinal(ciphertext);
             content = new String(decryptedText);
-            logger.debug("air-Q - airqHandler - decode(): content={}", content);
+            logger.debug("air-Q - airqHandler - decrypt(): Text decoded as String: {}", content);
         } catch (Exception e) {
-            System.out.println("air-Q - airqHandler - decode(): Error while decrypting: " + e.toString());
+            System.out.println("air-Q - airqHandler - decrypt(): Error while decrypting: " + e.toString());
+        }
+        return content;
+    }
+
+    public String encrypt(byte[] toencode, String password) {
+        String content = "";
+        logger.trace("air-Q - airqHandler - encrypt(): text to encode: {}", new String(toencode));
+        byte[] passkey = Arrays.copyOf(password.getBytes(), 32);
+        if (password.length() < 32) {
+            Arrays.fill(passkey, password.length(), 32, (byte) '0');
+        }
+        byte[] IV = new byte[16];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(IV);
+        SecretKey seckey = new SecretKeySpec(passkey, 0, passkey.length, "AES");
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            SecretKeySpec keySpec = new SecretKeySpec(seckey.getEncoded(), "AES");
+            IvParameterSpec ivSpec = new IvParameterSpec(IV);
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
+            byte[] encryptedText = cipher.doFinal(toencode);
+            byte[] totaltext = new byte[16 + encryptedText.length];
+            System.arraycopy(IV, 0, totaltext, 0, 16);
+            System.arraycopy(encryptedText, 0, totaltext, 16, encryptedText.length);
+            byte[] encodedcontent = Base64.getEncoder().encode(totaltext);
+            logger.trace("air-Q - airqHandler - encrypt(): encrypted text: {}", encodedcontent);
+            content = new String(encodedcontent);
+            // logger.debug("air-Q - airqHandler - encrypt(): content={}", content);
+        } catch (Exception e) {
+            System.out.println("air-Q - airqHandler - encrypt(): Error while encrypting: " + e.toString());
         }
         return content;
     }
@@ -371,7 +475,7 @@ public class airqHandler extends BaseThingHandler {
                         Gson gson = new Gson();
                         JsonElement ans = gson.fromJson(jsontext, JsonElement.class);
                         JsonObject jsonObj = ans.getAsJsonObject();
-                        String jsonAnswer = decode(jsonObj.get("content").getAsString().getBytes(),
+                        String jsonAnswer = decrypt(jsonObj.get("content").getAsString().getBytes(),
                                 (String) (getThing().getConfiguration().get("password")));
                         JsonElement decEl = gson.fromJson(jsonAnswer, JsonElement.class);
                         JsonObject decObj = decEl.getAsJsonObject();
@@ -442,9 +546,9 @@ public class airqHandler extends BaseThingHandler {
                     break;
                 case "string":
                 case "time":
-                    updateState(channelName, new StringType(dec.get(airqName).toString()));
-                    logger.trace("air-Q - airqHandler - processType(): channel {} set to {}", channelName,
-                            dec.get(airqName).toString());
+                    String strstr = dec.get(airqName).toString();
+                    updateState(channelName, new StringType(strstr.substring(1, strstr.length() - 1)));
+                    logger.trace("air-Q - airqHandler - processType(): channel {} set to {}", channelName, strstr);
                     break;
                 case "number":
                     updateState(channelName, new DecimalType(dec.get(airqName).toString()));
@@ -537,6 +641,53 @@ public class airqHandler extends BaseThingHandler {
                 // }
                 default:
                     break;
+            }
+        }
+    }
+
+    private void changeSettings(JsonObject jsonchange) {
+        String jsoncmd = jsonchange.toString();
+        logger.trace("air-Q - airqHandler - changeSettings(): called with jsoncmd={}", jsoncmd);
+        if ((ipaddress != null) && (password != null)) {
+            Result res = null;
+            try {
+                String url = "http://".concat(ipaddress.concat("/config"));
+                String jsonbody = encrypt(jsoncmd.getBytes(), (String) (getThing().getConfiguration().get("password")));
+                String fullbody = "request=".concat(jsonbody);
+                // String testdecode = decrypt(jsonbody.getBytes(),
+                // (String) (getThing().getConfiguration().get("password")));
+                // logger.trace("air-Q - airqHandler - changeSettings(): testdecode={}, ", testdecode);
+                logger.trace("air-Q - airqHandler - changeSettings(): doing call to url={}, method=POST, body={}", url,
+                        fullbody);
+                res = doNetwork(url, "POST", fullbody);
+                if (res == null) {
+                    if (thStatus != ThingStatus.OFFLINE) {
+                        logger.error(
+                                "air-Q - airqHandler - changeSettings(): cannot reach air-Q device. Status set to OFFLINE.");
+                        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
+                        thStatus = ThingStatus.OFFLINE;
+                    } else {
+                        logger.warn(
+                                "air-Q - airqHandler - changeSettings(): retried but still cannot reach the air-Q device.");
+                    }
+                } else {
+                    if (thStatus == ThingStatus.OFFLINE) {
+                        logger.error(
+                                "air-Q - airqHandler - changeSettings(): can reach air-Q device again, Status set back to ONLINE.");
+                        thStatus = ThingStatus.ONLINE;
+                        updateStatus(ThingStatus.ONLINE);
+                    }
+                    Gson gson = new Gson();
+                    JsonElement ans = gson.fromJson(res.getBody(), JsonElement.class);
+                    JsonObject jsonObj = ans.getAsJsonObject();
+                    String jsonAnswer = decrypt(jsonObj.get("content").getAsString().getBytes(),
+                            (String) (getThing().getConfiguration().get("password")));
+                    logger.trace("air-Q - airqHandler - changeSettings(): call returned {}", jsonAnswer);
+                }
+            } catch (Exception e) {
+                System.out.println(
+                        "air-Q - airqHandler - prepareChangeSettings(): Error while changing settings in air-Q data: "
+                                + e.toString());
             }
         }
     }

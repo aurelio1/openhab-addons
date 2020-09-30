@@ -464,6 +464,8 @@
         <state readOnly="true" pattern="± %.2f %%"></state>
     </channel-type>
   
+  <!--  settings -->
+  
     <channel-type id="Wifi" advanced="false">
         <item-type>Switch</item-type>
         <label>WLAN on or off</label>
@@ -508,7 +510,6 @@
     <channel-type id="TimeServer" advanced="false">
         <item-type>String</item-type>
         <label>Name of Timeserver address</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="geopos" advanced="false">
@@ -519,37 +520,31 @@
     <channel-type id="nightmode_StartDay" advanced="false">
         <item-type>String</item-type>
         <label>Time to start day operation</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="nightmode_StartNight" advanced="false">
         <item-type>String</item-type>
         <label>End of day operation</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="nightmode_BrightnessDay" advanced="false">
         <item-type>Number</item-type>
         <label>Brightness of LED during the day</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="nightmode_BrightnessNight" advanced="false">
         <item-type>Number</item-type>
         <label>Brightness of LED at night</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="nightmode_FanNightOff" advanced="false">
         <item-type>Switch</item-type>
         <label>Switch off fan at night</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="nightmode_WifiNightOff" advanced="false">
         <item-type>Switch</item-type>
         <label>Switch off WLAN at night</label>
-        <state readOnly="true"></state>
     </channel-type>
      
     <channel-type id="devicename" advanced="false">
@@ -561,13 +556,11 @@
     <channel-type id="RoomType" advanced="false">
         <item-type>String</item-type>
         <label>Type of room</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="Logging" advanced="false">
         <item-type>String</item-type>
         <label>Logging level</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="DeleteKey" advanced="false">
@@ -579,7 +572,6 @@
     <channel-type id="FireAlarm" advanced="false">
         <item-type>Switch</item-type>
         <label>Send Fire Alarm if certain levels are met</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="air-Q-Hardware-Version" advanced="false">
@@ -627,19 +619,16 @@
     <channel-type id="cloudUpload" advanced="false">
         <item-type>Switch</item-type>
         <label>Upload to air-q cloud</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="SecondsMeasurementDelay" advanced="false">
         <item-type>Number</item-type>
         <label>Rhythm of measurement for historic average</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="Rejection" advanced="false">
         <item-type>String</item-type>
         <label>Power Frequency</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="air-Q-Software-Version" advanced="false">
@@ -657,19 +646,16 @@
     <channel-type id="AutoDriftCompensation" advanced="false">
         <item-type>Switch</item-type>
         <label>Compensate automatic drift</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="AutoUpdate" advanced="false">
         <item-type>Switch</item-type>
         <label>Install Firmware updates automatically</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="AdvancedDataProcessing" advanced="false">
         <item-type>Switch</item-type>
         <label>Use advanced algorithms eg. for open window or presence of a person</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="Industry" advanced="false">
@@ -681,13 +667,11 @@
     <channel-type id="ppm_and_ppb" advanced="false">
         <item-type>Switch</item-type>
         <label>Output CO as ppm and NO2, O3 and SO2 as ppb value instead of mg/m3</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="GasAlarm" advanced="false">
         <item-type>Switch</item-type>
         <label>Send Gas Alarm if certain levels are met</label>
-        <state readOnly="true"></state>
     </channel-type>
     
     <channel-type id="id" advanced="false">
@@ -699,13 +683,11 @@
     <channel-type id="SoundInfo" advanced="false">
         <item-type>Switch</item-type>
         <label>Sound Info</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="AlarmForwarding" advanced="false">
         <item-type>Switch</item-type>
         <label>Forward gas or fire alarm to other air-Q devices in the household</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="usercalib" advanced="false">
@@ -723,7 +705,6 @@
     <channel-type id="Averaging" advanced="false">
         <item-type>Switch</item-type>
         <label>Do an average</label>
-        <state readOnly="true"></state>
     </channel-type>
 
     <channel-type id="SensorInfo" advanced="false">
@@ -735,7 +716,6 @@
     <channel-type id="ErrorBars" advanced="false">
         <item-type>Switch</item-type>
         <label>Calculate Maximum Errors</label>
-        <state readOnly="true"></state>
     </channel-type>
 
 </thing:thing-descriptions>
