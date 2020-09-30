@@ -27,8 +27,6 @@ In PaperUI, the air-Q thing must be configured with (both mandatory):
 
 <img src="src/main/resources/configuration.png" />
 
-The corresponding configuration in the .thing file will be explained later.
-
 ## Channels
 
 The air-Q Thing offers access to all sensor data of the air-Q, according to its version. This includes also the Maximum Error per sensor value.
@@ -117,14 +115,14 @@ The air-Q Thing offers access to all sensor data of the air-Q, according to its 
 
 ## Example
 ### airq.things
-...
+```
 Thing airq:airq:1 "air-Q" [ ipAddress="192.168.0.68", password="myAirQPassword" ]
-...
+```
 ### airq.items
-...
+```
 String  airQ_DeviceID               "Device ID, retrieved from Data"        {channel="airq:airq:1:DeviceID"}
 String  airQ_Status                 "Status of Sensors"                     {channel="airq:airq:1:Status"}
-Number  airQ_TypPS                  "Average"   {channel="airq:airq:1:TypPS"}
+Number  airQ_TypPS                  "Average"                               {channel="airq:airq:1:TypPS"}
 Number  airQ_bat                    "Battery State"                         {channel="airq:airq:1:bat"}
 Number  airQ_cnt03                  "Fine Dust >0,3 µm"                     {channel="airq:airq:1:cnt0_3"}
 Number  airQ_cnt05                  "Fine Dust >0,5 µm"                     {channel="airq:airq:1:cnt0_5"}
@@ -225,4 +223,4 @@ Switch airQ_InitialCalFinished      "Initial calibration has finished"      {cha
 Switch airQ_Averaging               "Do an average"                         {channel="airq:airq:1:Averaging"}
 String airQ_SensorInfo              "Information about the sensors"         {channel="airq:airq:1:SensorInfo"}
 Switch airQ_ErrorBars               "Calculate Maximum Errors"              {channel="airq:airq:1:ErrorBars"}
-...
+```
