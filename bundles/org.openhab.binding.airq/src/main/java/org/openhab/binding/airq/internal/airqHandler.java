@@ -22,6 +22,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
@@ -109,12 +111,21 @@ public class airqHandler extends BaseThingHandler {
         return false;
     }
 
+    private boolean isTimeFormat(String str) {
+        try {
+            LocalTime.parse(str);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        logger.trace(
+        logger.info(
                 "air-Q - airqHandler - handleCommand(): request received to handle value {} command {} of channelUID={}",
                 command, command.getClass(), channelUID);
-        if (command instanceof OnOffType) {
+        if ((command instanceof OnOffType) || (command instanceof StringType)) {
             JsonObject newobj = new JsonObject();
             JsonObject subjson = new JsonObject();
             switch (channelUID.getId()) {
@@ -147,14 +158,50 @@ public class airqHandler extends BaseThingHandler {
                     newobj.add("NightMode", subjson);
                     changeSettings(newobj);
                     break;
-                // TODO
-                case "TimeServer":
+                case "WiFissid":
+                    JsonElement wifidatael = new Gson().fromJson(command.toString(), JsonElement.class);
+                    JsonObject wifidataobj = wifidatael.getAsJsonObject();
+                    logger.info("air-Q: wifidatael={}, wifidataobj={}, string={}", wifidatael, wifidataobj,
+                            wifidataobj.get("WiFissid").getAsString());
+                    newobj.addProperty("WiFissid", wifidataobj.get("WiFissid").getAsString());
+                    newobj.addProperty("WiFipass", wifidataobj.get("WiFipass").getAsString());
+                    String bssid = wifidataobj.get("WiFibssid").getAsString();
+                    if (!bssid.equals("")) {
+                        newobj.addProperty("WiFibssid", bssid);
+                    }
+                    newobj.addProperty("reset", wifidataobj.get("reset").getAsString());
+                    logger.info("air-Q - airqHandler - handleCommand(): dummy to change settings: {}",
+                            newobj.toString());
+                    changeSettings(newobj);
                     break;
-                case "geopos":
+                case "TimeServer":
+                    newobj.addProperty(channelUID.getId(), command.toString());
+                    changeSettings(newobj);
                     break;
                 case "nightmode_StartDay":
+                    if (isTimeFormat(command.toString())) {
+                        subjson.addProperty("StartDay", command.toString());
+                        newobj.add("NightMode", subjson);
+                        changeSettings(newobj);
+                    } else {
+                        logger.error(
+                                "air-Q - airqHandler - handleCommand(): {} should be set to {} but it isn't a correct time format (eg. 08:00)",
+                                channelUID.getId(), command.toString());
+                    }
                     break;
                 case "nightmode_StartNight":
+                    if (isTimeFormat(command.toString())) {
+                        subjson.addProperty("StartNight", command.toString());
+                        newobj.add("NightMode", subjson);
+                        changeSettings(newobj);
+                    } else {
+                        logger.error(
+                                "air-Q - airqHandler - handleCommand(): {} should be set to {} but it isn't a correct time format (eg. 08:00)",
+                                channelUID.getId(), command.toString());
+                    }
+                    break;
+                // TODO
+                case "geopos":
                     break;
                 case "nightmode_BrightnessDay":
                     break;
@@ -170,8 +217,8 @@ public class airqHandler extends BaseThingHandler {
                     break;
                 default:
                     logger.error(
-                            "air-Q - airqHandler - handleCommand(): unknown OnOffType request received (channelUID={}, value={})",
-                            channelUID, command);
+                            "air-Q - airqHandler - handleCommand(): unknown command {} received (channelUID={}, value={})",
+                            command, channelUID, command);
             }
         } else if (command instanceof RefreshType) {
             if (pollingJob != null) {
@@ -481,9 +528,9 @@ public class airqHandler extends BaseThingHandler {
                         JsonObject decObj = decEl.getAsJsonObject();
                         logger.trace("air-Q - airqHandler - processConfigData(): decObj={}", decObj);
                         processType(decObj, "Wifi", "Wifi", "boolean");
-                        processType(decObj, "WIFIssid", "WIFIssid", "string");
-                        processType(decObj, "WIFIpass", "WIFIpass", "string");
-                        processType(decObj, "WIFIbssid", "WIFIbssid", "string");
+                        processType(decObj, "WiFissid", "WiFissid", "string");
+                        processType(decObj, "WiFipass", "WiFipass", "string");
+                        processType(decObj, "WiFibssid", "WiFibssid", "string");
                         processType(decObj, "WLANssid", "WLANssid", "arr");
                         processType(decObj, "pass", "pass", "string");
                         processType(decObj, "WifiInfo", "WifiInfo", "boolean");

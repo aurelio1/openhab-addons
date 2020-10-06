@@ -71,9 +71,9 @@
 
 <!--  configuration data -->
             <channel id="Wifi" typeId="Wifi" />
-            <channel id="WIFIssid" typeId="WIFIssid" />
-            <channel id="WIFIpass" typeId="WIFIpass" />
-            <channel id="WIFIbssid" typeId="WIFIbssid" />
+            <channel id="WiFissid" typeId="WIFIssid" />
+            <channel id="WiFipass" typeId="WIFIpass" />
+            <channel id="WiFibssid" typeId="WIFIbssid" />
             <channel id="WLANssid" typeId="WLANssid" />
             <channel id="pass" typeId="pass" />
             <channel id="WifiInfo" typeId="WifiInfo" />
@@ -472,19 +472,19 @@
         <state readOnly="true"></state>
     </channel-type>
     
-    <channel-type id="WIFIssid" advanced="false">
+    <channel-type id="WiFissid" advanced="false">
         <item-type>String</item-type>
         <label>Network SSID</label>
         <state readOnly="true"></state>
     </channel-type>
     
-    <channel-type id="WIFIpass" advanced="false">
+    <channel-type id="WiFipass" advanced="false">
         <item-type>String</item-type>
         <label>Wifi Password</label>
         <state readOnly="true"></state>
     </channel-type>
     
-    <channel-type id="WIFIbssid" advanced="false">
+    <channel-type id="WiFibssid" advanced="false">
         <item-type>String</item-type>
         <label>Network BSSID</label>
         <state readOnly="true"></state>
